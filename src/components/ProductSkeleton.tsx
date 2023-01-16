@@ -1,4 +1,4 @@
-import { Box, Skeleton, SkeletonText, VStack } from "@chakra-ui/react";
+import { Skeleton, SkeletonText, VStack } from "@chakra-ui/react";
 
 export default function ProductSkeleton() {
   return (

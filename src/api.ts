@@ -1,3 +1,4 @@
+import { QueryFunctionContext } from "@tanstack/react-query";
 import axios from "axios";
 
 const instance = axios.create({
@@ -6,3 +7,10 @@ const instance = axios.create({
 
 export const getProducts = () =>
   instance.get("products/").then((response) => response.data);
+
+export const getProduct = ({ queryKey }: QueryFunctionContext) => {
+  const [_, productPk] = queryKey;
+  return instance
+    .get(`products/${productPk}`)
+    .then((response) => response.data);
+};
