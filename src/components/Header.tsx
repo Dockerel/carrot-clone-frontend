@@ -43,8 +43,16 @@ export default function Header() {
       spacing={{ sm: 10 }}
     >
       <Link to="/">
-        <Box _hover={{ color: "orangered" }} color={"orange"}>
+        <Box
+          _hover={{ color: "orangered" }}
+          color={"orange"}
+          display="flex"
+          alignItems={"center"}
+        >
           <FaCarrot size={48} />
+          <Text ml={2} fontWeight={"bold"} fontSize="3xl">
+            Carrot
+          </Text>
         </Box>
       </Link>
       <HStack>
