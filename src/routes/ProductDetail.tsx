@@ -10,6 +10,7 @@ import { BiLeftArrowAlt, BiRightArrowAlt } from "react-icons/bi";
 // import Slider from "react-slick";
 import Slider from "react-slick";
 import ProductDetailSkeleton from "../components/ProductDetailSkeleton";
+import NoProductPage from "../components/NoProductPage";
 
 // Settings for the slider
 const settings = {
@@ -50,73 +51,75 @@ export default function ProductDetail() {
   // These are the images used in the slide
 
   return (
-    <Box mt={10} width={"100vw"} display="flex" justifyContent="center">
-      {isLoading ? (
-        <ProductDetailSkeleton />
-      ) : (
-        <Box
-          position={"relative"}
-          height={"600px"}
-          width={"600px"}
-          overflow={"hidden"}
-          borderRadius={"2xl"}
-        >
-          {/* CSS files for react-slick */}
-          <link
-            rel="stylesheet"
-            type="text/css"
-            charSet="UTF-8"
-            href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.6.0/slick.min.css"
-          />
-          <link
-            rel="stylesheet"
-            type="text/css"
-            href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.6.0/slick-theme.min.css"
-          />
-          {/* Left Icon */}
-          <IconButton
-            aria-label="left-arrow"
-            colorScheme="gray"
-            borderRadius="full"
-            position="absolute"
-            left={side}
-            top={top}
-            transform={"translate(0%, -50%)"}
-            zIndex={2}
-            onClick={() => slider?.slickPrev()}
+    <NoProductPage>
+      <Box mt={10} width={"100vw"} display="flex" justifyContent="center">
+        {isLoading ? (
+          <ProductDetailSkeleton />
+        ) : (
+          <Box
+            position={"relative"}
+            height={"600px"}
+            width={"600px"}
+            overflow={"hidden"}
+            borderRadius={"2xl"}
           >
-            <BiLeftArrowAlt fontSize={30} />
-          </IconButton>
-          {/* Right Icon */}
-          <IconButton
-            aria-label="right-arrow"
-            colorScheme="gray"
-            borderRadius="full"
-            position="absolute"
-            right={side}
-            top={top}
-            transform={"translate(0%, -50%)"}
-            zIndex={2}
-            onClick={() => slider?.slickNext()}
-          >
-            <BiRightArrowAlt fontSize={30} />
-          </IconButton>
-          {/* Slider */}
-          <Slider {...settings} ref={(slider) => setSlider(slider)}>
-            {cards.map((url, index) => (
-              <Box
-                key={index}
-                height={"600px"}
-                position="relative"
-                backgroundPosition="center"
-                backgroundRepeat="no-repeat"
-                backgroundSize="cover"
-                backgroundImage={`url(${url})`}
-              />
-            ))}
-          </Slider>
-        </Box>
-      )}
-    </Box>
+            {/* CSS files for react-slick */}
+            <link
+              rel="stylesheet"
+              type="text/css"
+              charSet="UTF-8"
+              href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.6.0/slick.min.css"
+            />
+            <link
+              rel="stylesheet"
+              type="text/css"
+              href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.6.0/slick-theme.min.css"
+            />
+            {/* Left Icon */}
+            <IconButton
+              aria-label="left-arrow"
+              colorScheme="gray"
+              borderRadius="full"
+              position="absolute"
+              left={side}
+              top={top}
+              transform={"translate(0%, -50%)"}
+              zIndex={2}
+              onClick={() => slider?.slickPrev()}
+            >
+              <BiLeftArrowAlt fontSize={30} />
+            </IconButton>
+            {/* Right Icon */}
+            <IconButton
+              aria-label="right-arrow"
+              colorScheme="gray"
+              borderRadius="full"
+              position="absolute"
+              right={side}
+              top={top}
+              transform={"translate(0%, -50%)"}
+              zIndex={2}
+              onClick={() => slider?.slickNext()}
+            >
+              <BiRightArrowAlt fontSize={30} />
+            </IconButton>
+            {/* Slider */}
+            <Slider {...settings} ref={(slider) => setSlider(slider)}>
+              {cards.map((url, index) => (
+                <Box
+                  key={index}
+                  height={"600px"}
+                  position="relative"
+                  backgroundPosition="center"
+                  backgroundRepeat="no-repeat"
+                  backgroundSize="cover"
+                  backgroundImage={`url(${url})`}
+                />
+              ))}
+            </Slider>
+          </Box>
+        )}
+      </Box>
+    </NoProductPage>
   );
 }
