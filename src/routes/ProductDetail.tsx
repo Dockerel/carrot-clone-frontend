@@ -3,7 +3,16 @@ import { useParams } from "react-router-dom";
 import { getProduct } from "../api";
 import { IProductDetail } from "../types";
 import React from "react";
-import { Box, IconButton, useBreakpointValue } from "@chakra-ui/react";
+import {
+  Box,
+  HStack,
+  IconButton,
+  Img,
+  Text,
+  Textarea,
+  useBreakpointValue,
+  VStack,
+} from "@chakra-ui/react";
 // Here we have used react-icons package for the icons
 import { BiLeftArrowAlt, BiRightArrowAlt } from "react-icons/bi";
 // And react-slick as our Carousel Lib
@@ -11,6 +20,7 @@ import { BiLeftArrowAlt, BiRightArrowAlt } from "react-icons/bi";
 import Slider from "react-slick";
 import ProductDetailSkeleton from "../components/ProductDetailSkeleton";
 import NoProductPage from "../components/NoProductPage";
+import { FaSmile } from "react-icons/fa";
 
 // Settings for the slider
 const settings = {
@@ -31,6 +41,12 @@ export default function ProductDetail() {
     ["products", productPk],
     getProduct
   );
+
+  const formatDate = (dateFormat: string | undefined): string => {
+    return `${dateFormat?.split("T")[0].split("-")[0].slice(2, 4)}.${
+      dateFormat?.split("T")[0].split("-")[1]
+    }.${dateFormat?.split("T")[0].split("-")[2]}`;
+  };
 
   // As we have used custom buttons, we need a reference variable to
   // change the state
@@ -56,68 +72,126 @@ export default function ProductDetail() {
         {isLoading ? (
           <ProductDetailSkeleton />
         ) : (
-          <Box
-            position={"relative"}
-            height={"600px"}
-            width={"600px"}
-            overflow={"hidden"}
-            borderRadius={"2xl"}
-          >
-            {/* CSS files for react-slick */}
-            <link
-              rel="stylesheet"
-              type="text/css"
-              charSet="UTF-8"
-              href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.6.0/slick.min.css"
-            />
-            <link
-              rel="stylesheet"
-              type="text/css"
-              href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.6.0/slick-theme.min.css"
-            />
-            {/* Left Icon */}
-            <IconButton
-              aria-label="left-arrow"
-              colorScheme="gray"
-              borderRadius="full"
-              position="absolute"
-              left={side}
-              top={top}
-              transform={"translate(0%, -50%)"}
-              zIndex={2}
-              onClick={() => slider?.slickPrev()}
+          <VStack pb={5} display="block">
+            <Box
+              position={"relative"}
+              height={"40vw"}
+              width={"40vw"}
+              overflow={"hidden"}
+              borderRadius={"2xl"}
             >
-              <BiLeftArrowAlt fontSize={30} />
-            </IconButton>
-            {/* Right Icon */}
-            <IconButton
-              aria-label="right-arrow"
-              colorScheme="gray"
-              borderRadius="full"
-              position="absolute"
-              right={side}
-              top={top}
-              transform={"translate(0%, -50%)"}
-              zIndex={2}
-              onClick={() => slider?.slickNext()}
+              {/* CSS files for react-slick */}
+              <link
+                rel="stylesheet"
+                type="text/css"
+                charSet="UTF-8"
+                href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.6.0/slick.min.css"
+              />
+              <link
+                rel="stylesheet"
+                type="text/css"
+                href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.6.0/slick-theme.min.css"
+              />
+              {/* Left Icon */}
+              <IconButton
+                aria-label="left-arrow"
+                colorScheme="gray"
+                borderRadius="full"
+                position="absolute"
+                left={side}
+                top={top}
+                transform={"translate(0%, -50%)"}
+                zIndex={2}
+                onClick={() => slider?.slickPrev()}
+              >
+                <BiLeftArrowAlt fontSize={30} />
+              </IconButton>
+              {/* Right Icon */}
+              <IconButton
+                aria-label="right-arrow"
+                colorScheme="gray"
+                borderRadius="full"
+                position="absolute"
+                right={side}
+                top={top}
+                transform={"translate(0%, -50%)"}
+                zIndex={2}
+                onClick={() => slider?.slickNext()}
+              >
+                <BiRightArrowAlt fontSize={30} />
+              </IconButton>
+              {/* Slider */}
+              <Slider {...settings} ref={(slider) => setSlider(slider)}>
+                {cards.map((url, index) => (
+                  <Box
+                    key={index}
+                    height={"40vw"}
+                    position="relative"
+                    backgroundPosition="center"
+                    backgroundRepeat="no-repeat"
+                    backgroundSize="cover"
+                    backgroundImage={`url(${url})`}
+                  />
+                ))}
+              </Slider>
+            </Box>
+            <HStack
+              borderBottom={"1px solid gray"}
+              py={6}
+              w={"40vw"}
+              display="flex"
+              justifyContent={"space-between"}
             >
-              <BiRightArrowAlt fontSize={30} />
-            </IconButton>
-            {/* Slider */}
-            <Slider {...settings} ref={(slider) => setSlider(slider)}>
-              {cards.map((url, index) => (
-                <Box
-                  key={index}
-                  height={"600px"}
-                  position="relative"
-                  backgroundPosition="center"
-                  backgroundRepeat="no-repeat"
-                  backgroundSize="cover"
-                  backgroundImage={`url(${url})`}
+              <HStack gap={3}>
+                <Img
+                  borderRadius={"full"}
+                  w={"50px"}
+                  h={"50px"}
+                  src={cards[0]}
                 />
-              ))}
-            </Slider>
-          </Box>
+                <VStack display={"block"}>
+                  <Text fontWeight={"bold"} fontSize={23}>
+                    {data?.owner.username}
+                  </Text>
+                  <Text fontSize={15}>
+                    {data?.owner.address.split(",")[0]} /{" "}
+                    {data?.owner.address.split(",")[1]}
+                  </Text>
+                </VStack>
+              </HStack>
+              <VStack alignItems={"flex-end"}>
+                <HStack>
+                  <VStack>
+                    <Text fontSize={20} fontWeight="bold">
+                      37.4 °C
+                    </Text>
+                  </VStack>
+                  <Box fontSize={35} color="blue.400">
+                    <FaSmile />
+                  </Box>
+                </HStack>
+                <Text fontSize={13}>매너온도</Text>
+              </VStack>
+            </HStack>
+            <Box w={"40vw"} py={5} borderBottom={"1px solid gray"}>
+              <VStack alignItems={"flex-start"}>
+                <Text fontSize={20} fontWeight={"bold"}>
+                  {data?.name}
+                </Text>
+                <HStack>
+                  <Text fontSize={14}>{data?.kind}</Text>
+                  <Text>∙</Text>
+                  <Text fontSize={14}>{formatDate(data?.created_at)}</Text>
+                </HStack>
+                <Text fontWeight={"bold"} fontSize={20}>
+                  {data?.price} 원
+                </Text>
+                <Box w={"70%"}>
+                  <Text fontSize={16}>{data?.description}</Text>
+                </Box>
+              </VStack>
+            </Box>
+          </VStack>
         )}
       </Box>
     </NoProductPage>

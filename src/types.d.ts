@@ -48,4 +48,5 @@ export interface IProductDetail {
   kind: string;
   is_reported: false;
   is_sold: false;
+  created_at: string;
 }
