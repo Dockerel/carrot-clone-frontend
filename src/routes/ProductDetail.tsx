@@ -4,6 +4,7 @@ import { getProduct } from "../api";
 import { IProductDetail } from "../types";
 import React from "react";
 import {
+  Avatar,
   Box,
   HStack,
   IconButton,
@@ -143,11 +144,12 @@ export default function ProductDetail() {
               justifyContent={"space-between"}
             >
               <HStack gap={3}>
-                <Img
-                  borderRadius={"full"}
+                <Avatar
+                  name={data?.owner.username}
+                  size={"md"}
+                  src={data?.owner.avatar}
                   w={"50px"}
                   h={"50px"}
-                  src={cards[0]}
                 />
                 <VStack display={"block"}>
                   <Text fontWeight={"bold"} fontSize={23}>

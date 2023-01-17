@@ -16,6 +16,7 @@ export interface IProductList {
     username: string;
     phone_nb: string;
     address: string;
+    avatar: string;
   };
   photos: IProductPhoto[];
   name: string;
@@ -40,6 +41,7 @@ export interface IProductDetail {
     username: string;
     phone_nb: string;
     address: string;
+    avatar: string;
   };
   photos: IProductPhoto[];
   name: string;
