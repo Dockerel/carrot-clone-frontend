@@ -1,21 +1,35 @@
 import {
+  Avatar,
   Box,
   Button,
   HStack,
   IconButton,
   LightMode,
+  Menu,
+  MenuButton,
+  MenuItem,
+  MenuList,
   Stack,
   Text,
+  ToastId,
   useColorMode,
   useColorModeValue,
   useDisclosure,
+  useToast,
 } from "@chakra-ui/react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { FaCarrot, FaMoon, FaSun } from "react-icons/fa";
 import SignupModal from "./SignupModal";
 import SigninModal from "./SigninModal";
+import useUser from "../lib/useUser";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { signOut } from "../api";
+import { useRef } from "react";
 
 export default function Header() {
+  const queryClient = useQueryClient();
+  const navigate = useNavigate();
+  const { userLoading, user, isLoggedIn } = useUser();
   const Icon = useColorModeValue(FaMoon, FaSun);
   const { colorMode, toggleColorMode } = useColorMode();
   const {
@@ -28,6 +42,34 @@ export default function Header() {
     onClose: onSignInClose,
     onOpen: onSignInOpen,
   } = useDisclosure();
+  const toast = useToast();
+  const toastId = useRef<ToastId>();
+  const mutation = useMutation(signOut, {
+    onMutate: () => {
+      toastId.current = toast({
+        title: "Log out",
+        description: "See you soon!",
+        status: "loading",
+        isClosable: true,
+      });
+    },
+    onSuccess: () => {
+      if (toastId.current) {
+        toast.update(toastId.current, {
+          status: "success",
+          title: "Done!",
+          description: "Bye bye!",
+          isClosable: true,
+        });
+      }
+      queryClient.refetchQueries(["me"]);
+      queryClient.refetchQueries(["rooms"]);
+      navigate("/");
+    },
+  });
+  const onSignOut = () => {
+    mutation.mutate();
+  };
   return (
     <Stack
       py={5}
@@ -55,22 +97,37 @@ export default function Header() {
           </Text>
         </Box>
       </Link>
-      <HStack>
-        <IconButton
-          variant={"ghost"}
-          onClick={toggleColorMode}
-          aria-label="Toggle dark mode"
-          icon={<Icon />}
-        />
-        <Button onClick={onSignInOpen}>Sign in</Button>
-        <LightMode>
-          <Button onClick={onSignUpOpen} colorScheme={"orange"}>
-            Sign up
-          </Button>
-        </LightMode>
-      </HStack>
-      <SignupModal isOpen={isSignUpOpen} onClose={onSignUpClose} />
-      <SigninModal isOpen={isSignInOpen} onClose={onSignInClose} />
+      <Box>
+        <HStack>
+          <IconButton
+            variant={"ghost"}
+            onClick={toggleColorMode}
+            aria-label="Toggle dark mode"
+            icon={<Icon />}
+          />
+          {userLoading ? null : isLoggedIn ? (
+            <Menu>
+              <MenuButton>
+                <Avatar name={user?.username} size={"md"} src={user?.avatar} />
+              </MenuButton>
+              <MenuList>
+                <MenuItem onClick={onSignOut}>Log out</MenuItem>
+              </MenuList>
+            </Menu>
+          ) : (
+            <>
+              <Button onClick={onSignInOpen}>Sign in</Button>
+              <LightMode>
+                <Button onClick={onSignUpOpen} colorScheme={"orange"}>
+                  Sign up
+                </Button>
+              </LightMode>
+            </>
+          )}
+        </HStack>
+        <SignupModal isOpen={isSignUpOpen} onClose={onSignUpClose} />
+        <SigninModal isOpen={isSignInOpen} onClose={onSignInClose} />
+      </Box>
     </Stack>
   );
 }

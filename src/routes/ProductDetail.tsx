@@ -22,6 +22,7 @@ import Slider from "react-slick";
 import ProductDetailSkeleton from "../components/ProductDetailSkeleton";
 import NoProductPage from "../components/NoProductPage";
 import { FaSmile } from "react-icons/fa";
+import { formatDate } from "../lib/utils";
 
 // Settings for the slider
 const settings = {
@@ -42,12 +43,6 @@ export default function ProductDetail() {
     ["products", productPk],
     getProduct
   );
-
-  const formatDate = (dateFormat: string | undefined): string => {
-    return `${dateFormat?.split("T")[0].split("-")[0].slice(2, 4)}.${
-      dateFormat?.split("T")[0].split("-")[1]
-    }.${dateFormat?.split("T")[0].split("-")[2]}`;
-  };
 
   // As we have used custom buttons, we need a reference variable to
   // change the state

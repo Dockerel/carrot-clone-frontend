@@ -52,3 +52,14 @@ export interface IProductDetail {
   is_sold: false;
   created_at: string;
 }
+
+export interface IUserMe {
+  id: number;
+  username: string;
+  first_name: string;
+  last_name: string;
+  email: string;
+  avatar: string;
+  phone_nb: string;
+  address: string;
+}
