@@ -6,6 +6,7 @@ import KakaoConfirm from "./routes/KakaoConfirm";
 import NaverConfirm from "./routes/NaverConfirm";
 import NotFound from "./routes/NotFound";
 import ProductDetail from "./routes/ProductDetail";
+import SignUpConf from "./routes/SignUpConf";
 
 const router = createBrowserRouter([
   {
@@ -20,6 +21,10 @@ const router = createBrowserRouter([
       {
         path: "products/:productPk",
         element: <ProductDetail />,
+      },
+      {
+        path: "user/signup-conf",
+        element: <SignUpConf />,
       },
       {
         path: "social",

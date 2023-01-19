@@ -36,7 +36,6 @@ interface ISignUpModalProps {
 interface IForm {
   username: string;
   email: string;
-  phone_nb: string;
   password: string;
   password_check: string;
 }
@@ -78,18 +77,11 @@ export default function SignupModal({ isOpen, onClose }: ISignUpModalProps) {
       }
     },
   });
-  const onSubmit = ({
-    username,
-    email,
-    phone_nb,
-    password,
-    password_check,
-  }: IForm) => {
+  const onSubmit = ({ username, email, password, password_check }: IForm) => {
     if (password === password_check) {
       mutation.mutate({
         username,
         email,
-        phone_nb: phone_nb.split("-").join(""),
         password,
         password_check,
       });
@@ -135,21 +127,6 @@ export default function SignupModal({ isOpen, onClose }: ISignUpModalProps) {
                 type={"email"}
                 variant={"filled"}
                 placeholder="Email"
-              />
-            </InputGroup>
-            <InputGroup>
-              <InputLeftElement
-                children={
-                  <Box color={"gray.500"}>
-                    <FaPhone />
-                  </Box>
-                }
-              ></InputLeftElement>
-              <Input
-                {...register("phone_nb", { required: true })}
-                type={"string"}
-                variant={"filled"}
-                placeholder="Phone number without -"
               />
             </InputGroup>
             <InputGroup>

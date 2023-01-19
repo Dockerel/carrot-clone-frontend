@@ -23,7 +23,6 @@ export const getMe = () =>
 interface ISignUpVariables {
   username: string;
   email: string;
-  phone_nb: string;
   password: string;
   password_check: string;
 }
@@ -36,14 +35,13 @@ interface ISignInVariables {
 export const signUp = ({
   username,
   email,
-  phone_nb,
   password,
   password_check,
 }: ISignUpVariables) => {
   return instance
     .post(
       "users/",
-      { username, email, phone_nb, password, password_check },
+      { username, email, password, password_check },
       {
         headers: { "X-CSRFToken": Cookie.get("csrftoken") || "" },
       }
