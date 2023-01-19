@@ -67,3 +67,35 @@ export const signOut = () =>
       headers: { "X-CSRFToken": Cookie.get("csrftoken") || "" },
     })
     .then((response) => response.status);
+
+export const githubLogin = (code: string) =>
+  instance
+    .post(
+      "users/github",
+      { code },
+      { headers: { "X-CSRFToken": Cookie.get("csrftoken") || "" } }
+    )
+    .then((response) => response.status);
+
+export const kakaoLogin = (code: string) =>
+  instance
+    .post(
+      "users/kakao",
+      { code },
+      { headers: { "X-CSRFToken": Cookie.get("csrftoken") || "" } }
+    )
+    .then((response) => response.status);
+
+interface INaverLogin {
+  code: string;
+  state: string;
+}
+
+export const naverLogin = ({ code, state }: INaverLogin) =>
+  instance
+    .post(
+      "users/naver",
+      { code, state },
+      { headers: { "X-CSRFToken": Cookie.get("csrftoken") || "" } }
+    )
+    .then((response) => response.status);
