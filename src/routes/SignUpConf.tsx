@@ -8,14 +8,24 @@ import {
   Input,
   VStack,
 } from "@chakra-ui/react";
-import { useNavigate } from "react-router-dom";
+import { useState } from "react";
+import DaumPostcode from "react-daum-postcode";
 
 export default function SignUpConf() {
-  const navigate = useNavigate();
-  const handleClick = () => {
-    navigate("/");
-  };
+  const [address, setAddress] = useState("");
+  const [openPostcode, setOpenPostcode] = useState(false);
+  const handle = {
+    // 버튼 클릭 이벤트
+    clickButton: () => {
+      setOpenPostcode((current) => !current);
+    },
 
+    // 주소 선택 이벤트
+    selectAddress: (data: any) => {
+      setAddress(data.address);
+      setOpenPostcode(false);
+    },
+  };
   return (
     <Container mt={100}>
       <Heading textAlign={"center"}>Account setting</Heading>
@@ -28,7 +38,19 @@ export default function SignUpConf() {
 
         <FormControl>
           <FormLabel>Address</FormLabel>
-          <Input onClick={handleClick} required type="text"></Input>
+          <Input
+            onClick={handle.clickButton}
+            required
+            type="text"
+            value={address}
+            readOnly
+          ></Input>
+          {openPostcode && (
+            <DaumPostcode
+              onComplete={handle.selectAddress} // 값을 선택할 경우 실행되는 이벤트
+              autoClose={false} // 값을 선택할 경우 사용되는 DOM을 제거하여 자동 닫힘 설정
+            />
+          )}
           <FormHelperText>Click to search address</FormHelperText>
         </FormControl>
 
