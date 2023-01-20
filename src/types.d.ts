@@ -63,3 +63,12 @@ export interface IUserMe {
   phone_nb: string;
   address: string;
 }
+
+export interface IModifyUserMe {
+  first_name: string;
+  last_name: string;
+  email: string;
+  phone_nb: string;
+  address: string;
+  detailed_address: string;
+}
