@@ -4,6 +4,7 @@ import { getProducts } from "../api";
 import Product from "../components/Product";
 import ProductSkeleton from "../components/ProductSkeleton";
 import { IProductList } from "../types";
+import noImage from "../image/noImage.jpg";
 
 export default function Home() {
   const { isLoading, data } = useQuery<IProductList[]>(
@@ -45,7 +46,9 @@ export default function Home() {
         <Product
           key={product.id}
           id={product.id}
-          photoUrl={product.photos[0].file}
+          photoUrl={
+            product.photos[0] === undefined ? noImage : product.photos[0].file
+          }
           name={product.name}
           price={product.price}
           address={product.owner.address}

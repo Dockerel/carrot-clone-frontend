@@ -1,15 +1,9 @@
-import {
-  Box,
-  Heading,
-  Spinner,
-  Text,
-  useToast,
-  VStack,
-} from "@chakra-ui/react";
+import { useToast } from "@chakra-ui/react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useEffect, useRef } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { githubLogin } from "../api";
+import LoginProcess from "../components/LoginProcess";
 
 export default function GithubConfirm() {
   const { search } = useLocation();
@@ -36,13 +30,5 @@ export default function GithubConfirm() {
   useEffect(() => {
     confirmLogin();
   }, []);
-  return (
-    <VStack justifyContent={"center"} mt={40}>
-      <Heading>Processing log in...</Heading>
-      <Box pb={5}>
-        <Text>Wait a second...</Text>
-      </Box>
-      <Spinner size={"lg"} />
-    </VStack>
-  );
+  return <LoginProcess />;
 }

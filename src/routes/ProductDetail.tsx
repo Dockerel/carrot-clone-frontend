@@ -8,9 +8,7 @@ import {
   Box,
   HStack,
   IconButton,
-  Img,
   Text,
-  Textarea,
   useBreakpointValue,
   VStack,
 } from "@chakra-ui/react";

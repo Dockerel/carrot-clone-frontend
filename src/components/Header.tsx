@@ -111,7 +111,7 @@ export default function Header() {
                 <Avatar name={user?.username} size={"md"} src={user?.avatar} />
               </MenuButton>
               <MenuList>
-                <Link to="/user/modify">
+                <Link to="/user-modify">
                   <MenuItem>Modify user</MenuItem>
                 </Link>
                 <MenuItem onClick={onSignOut}>Log out</MenuItem>

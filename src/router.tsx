@@ -6,6 +6,7 @@ import KakaoConfirm from "./routes/KakaoConfirm";
 import NaverConfirm from "./routes/NaverConfirm";
 import NotFound from "./routes/NotFound";
 import ProductDetail from "./routes/ProductDetail";
+import PublicUserDetail from "./routes/PublicUserDetail";
 import UserModify from "./routes/UserModify";
 
 const router = createBrowserRouter([
@@ -23,8 +24,12 @@ const router = createBrowserRouter([
         element: <ProductDetail />,
       },
       {
-        path: "user/modify",
+        path: "user-modify",
         element: <UserModify />,
+      },
+      {
+        path: "user/:username",
+        element: <PublicUserDetail />,
       },
       {
         path: "social",

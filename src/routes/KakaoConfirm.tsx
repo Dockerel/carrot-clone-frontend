@@ -1,15 +1,9 @@
-import {
-  Box,
-  Heading,
-  Spinner,
-  Text,
-  useToast,
-  VStack,
-} from "@chakra-ui/react";
+import { useToast } from "@chakra-ui/react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { kakaoLogin } from "../api";
+import LoginProcess from "../components/LoginProcess";
 
 export default function KakaoConfirm() {
   const { search } = useLocation();
@@ -37,13 +31,5 @@ export default function KakaoConfirm() {
   useEffect(() => {
     confirmKakao();
   }, []);
-  return (
-    <VStack justifyContent={"center"} mt={40}>
-      <Heading>Processing log in...</Heading>
-      <Box pb={5}>
-        <Text>Wait a second...</Text>
-      </Box>
-      <Spinner size={"lg"} />
-    </VStack>
-  );
+  return <LoginProcess />;
 }
