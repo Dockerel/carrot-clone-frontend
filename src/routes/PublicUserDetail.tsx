@@ -7,10 +7,44 @@ import {
   Img,
   Square,
   Text,
+  useToast,
   VStack,
 } from "@chakra-ui/react";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { Link, useParams } from "react-router-dom";
+import {
+  getPublicUserDetail,
+  getUserOnSaleProducts,
+  postProductIsSold,
+} from "../api";
+import publicUser from "../image/publicUser.jpg";
+import noImage from "../image/noImage.jpg";
+import { IPublicUserDetail, IUserOnSaleProduct } from "../types";
+import useUser from "../lib/useUser";
 
 export default function PublicUserDetail() {
+  const { username } = useParams();
+  const { user } = useUser();
+  const { isLoading: userDataIsLoading, data: userData } =
+    useQuery<IPublicUserDetail>(["userDetail", username], getPublicUserDetail);
+  const { isLoading: productsDataIsLoading, data: productsData } = useQuery<
+    IUserOnSaleProduct[]
+  >(["userOnSaleProducts", username], getUserOnSaleProducts);
+  const queryClient = useQueryClient();
+  const toast = useToast();
+  const mutation = useMutation(postProductIsSold, {
+    onSuccess: () => {
+      toast({
+        title: "Product status changed to 'Sold'!",
+        status: "success",
+      });
+      queryClient.refetchQueries(["userOnSaleProducts"]);
+    },
+  });
+  const onSoldClick = (id: number) => {
+    mutation.mutate(id);
+  };
+
   return (
     <Center>
       <VStack align={"flex-start"} width={"50vw"} mt={10}>
@@ -19,21 +53,21 @@ export default function PublicUserDetail() {
             height={"70px"}
             width={"70px"}
             borderRadius={"full"}
-            src="https://avatars.githubusercontent.com/u/74302278?v=4"
+            src={userData?.avatar ? userData?.avatar : publicUser}
           />
           <VStack align={"flex-start"} height={"100%"}>
             <HStack align={"flex-end"} h={"50%"}>
               <Text fontSize={22} fontWeight={"extrabold"}>
-                도등어
+                {userData?.username}
               </Text>
-              <Text>서구 화정1동</Text>
+              <Text>{userData?.address}</Text>
             </HStack>
             <HStack align={"flex-start"} h={"50%"}>
               <Text color={"gray"} fontWeight={"bold"}>
                 Rating
               </Text>
               <Text color={"gray"} fontWeight={"bold"}>
-                4 / 5
+                {userData?.rating} / 5
               </Text>
             </HStack>
           </VStack>
@@ -57,78 +91,65 @@ export default function PublicUserDetail() {
           w={"100%"}
           templateColumns={{ sm: "1fr", md: "repeat(3, 1fr)" }}
         >
-          <VStack w={"100%"} h={"200px"} display={"flex"} alignItems={"center"}>
-            <Square size={"100%"}>
-              <Img
-                borderRadius={"lg"}
-                w={"100%"}
-                h={"100%"}
-                objectFit="cover"
-                src="https://avatars.githubusercontent.com/u/74302278?v=4"
-              />
-            </Square>
-            <Box w={"100%"}>
-              <Text fontSize={20}>아이폰 팔아요</Text>
-              <Text fontWeight={"extrabold"} fontSize={17}>
-                10000 원
+          {!productsDataIsLoading && productsData ? (
+            <>
+              {productsData?.map((product, index) => (
+                <Box position={"relative"} key={index}>
+                  <Link to={`/products/${product.pk}`}>
+                    <VStack
+                      w={"100%"}
+                      h={"200px"}
+                      display={"flex"}
+                      alignItems={"center"}
+                    >
+                      <Square size={"100%"}>
+                        <Img
+                          borderRadius={"lg"}
+                          w={"100%"}
+                          h={"100%"}
+                          objectFit="cover"
+                          src={
+                            product.photos.length > 0
+                              ? product.photos[0].file
+                              : noImage
+                          }
+                        />
+                      </Square>
+                      <Box w={"100%"}>
+                        <Text fontSize={20}>{product.name}</Text>
+                        <Text fontWeight={"extrabold"} fontSize={17}>
+                          {product.price} 원
+                        </Text>
+                        <Text fontSize={15}>{userData?.address}</Text>
+                      </Box>
+                    </VStack>
+                  </Link>
+                  {userData?.username !== user?.username ? null : (
+                    <Button
+                      mt={"10px"}
+                      colorScheme={"orange"}
+                      w={"60px"}
+                      h={"30px"}
+                      fontSize={"15px"}
+                      position={"absolute"}
+                      top={"0"}
+                      left={"10px"}
+                      disabled={product.is_sold}
+                      onClick={() => onSoldClick(product.pk)}
+                    >
+                      Sold
+                    </Button>
+                  )}
+                </Box>
+              ))}
+            </>
+          ) : (
+            <Center mt={"10%"}>
+              <Text fontSize={"30px"} fontWeight={"extrabold"}>
+                No Product...
               </Text>
-              <Text fontSize={15}>대구 두류3동</Text>
-            </Box>
-          </VStack>
-          <VStack w={"100%"} h={"200px"} display={"flex"} alignItems={"center"}>
-            <Square size={"100%"}>
-              <Img
-                borderRadius={"lg"}
-                w={"100%"}
-                h={"100%"}
-                objectFit="cover"
-                src="https://dnvefa72aowie.cloudfront.net/origin/article/202210/B1C8877A8BCD98EC3F6731683AFD092BB88890633E69E9DDBAC9441B1612030D.jpg?q=82&s=300x300&t=crop"
-              />
-            </Square>
-            <Box w={"100%"}>
-              <Text fontSize={20}>아이폰 팔아요</Text>
-              <Text fontWeight={"extrabold"} fontSize={17}>
-                10000 원
-              </Text>
-              <Text fontSize={15}>대구 두류3동</Text>
-            </Box>
-          </VStack>
-          <VStack w={"100%"} h={"200px"} display={"flex"} alignItems={"center"}>
-            <Square size={"100%"}>
-              <Img
-                borderRadius={"lg"}
-                w={"100%"}
-                h={"100%"}
-                objectFit="cover"
-                src="https://avatars.githubusercontent.com/u/74302278?v=4"
-              />
-            </Square>
-            <Box w={"100%"}>
-              <Text fontSize={20}>아이폰 팔아요</Text>
-              <Text fontWeight={"extrabold"} fontSize={17}>
-                10000 원
-              </Text>
-              <Text fontSize={15}>대구 두류3동</Text>
-            </Box>
-          </VStack>
-          <VStack w={"100%"} h={"200px"} display={"flex"} alignItems={"center"}>
-            <Square size={"100%"}>
-              <Img
-                borderRadius={"lg"}
-                w={"100%"}
-                h={"100%"}
-                objectFit="cover"
-                src="https://avatars.githubusercontent.com/u/74302278?v=4"
-              />
-            </Square>
-            <Box w={"100%"}>
-              <Text fontSize={20}>아이폰 팔아요</Text>
-              <Text fontWeight={"extrabold"} fontSize={17}>
-                10000 원
-              </Text>
-              <Text fontSize={15}>대구 두류3동</Text>
-            </Box>
-          </VStack>
+            </Center>
+          )}
         </Grid>
       </VStack>
     </Center>

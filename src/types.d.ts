@@ -72,3 +72,20 @@ export interface IModifyUserMe {
   address: string;
   detailed_address: string;
 }
+
+export interface IPublicUserDetail {
+  id: number;
+  username: string;
+  email: string;
+  avatar: string;
+  rating: number;
+  address: string;
+}
+
+export interface IUserOnSaleProduct {
+  pk: number;
+  name: string;
+  price: number;
+  photos: { file: string }[];
+  is_sold: boolean;
+}

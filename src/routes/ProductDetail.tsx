@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
-import { useParams } from "react-router-dom";
-import { getProduct } from "../api";
-import { IProductDetail } from "../types";
+import { Link, useParams } from "react-router-dom";
+import { getProduct, getPublicUserDetail } from "../api";
+import { IProductDetail, IPublicUserDetail } from "../types";
 import React from "react";
 import {
   Avatar,
@@ -19,8 +19,10 @@ import { BiLeftArrowAlt, BiRightArrowAlt } from "react-icons/bi";
 import Slider from "react-slick";
 import ProductDetailSkeleton from "../components/ProductDetailSkeleton";
 import NoProductPage from "../components/NoProductPage";
-import { FaSmile } from "react-icons/fa";
+import { FaRegMeh, FaSmile } from "react-icons/fa";
 import { formatDate } from "../lib/utils";
+import noImage from "../image/noImage.jpg";
+import useUser from "../lib/useUser";
 
 // Settings for the slider
 const settings = {
@@ -41,7 +43,11 @@ export default function ProductDetail() {
     ["products", productPk],
     getProduct
   );
-
+  const { isLoading: userDataIsLoading, data: userData } =
+    useQuery<IPublicUserDetail>(
+      ["userDetail", data?.owner.username],
+      getPublicUserDetail
+    );
   // As we have used custom buttons, we need a reference variable to
   // change the state
   const [slider, setSlider] = React.useState<Slider | null>(null);
@@ -57,6 +63,8 @@ export default function ProductDetail() {
     for (let i = 0; i < photoLength; i++) {
       cards.push(data?.photos[i].file);
     }
+  } else {
+    cards.push(noImage);
   }
   // These are the images used in the slide
 
@@ -136,36 +144,46 @@ export default function ProductDetail() {
               display="flex"
               justifyContent={"space-between"}
             >
-              <HStack gap={3}>
-                <Avatar
-                  name={data?.owner.username}
-                  size={"md"}
-                  src={data?.owner.avatar}
-                  w={"50px"}
-                  h={"50px"}
-                />
-                <VStack display={"block"}>
-                  <Text fontWeight={"bold"} fontSize={23}>
-                    {data?.owner.username}
-                  </Text>
-                  <Text fontSize={15}>
-                    {data?.owner.address.split(",")[0]} /{" "}
-                    {data?.owner.address.split(",")[1]}
-                  </Text>
-                </VStack>
-              </HStack>
+              <Link to={`/user/${data?.owner.username}`}>
+                <HStack gap={3}>
+                  <Avatar
+                    name={data?.owner.username}
+                    size={"md"}
+                    src={data?.owner.avatar}
+                    w={"50px"}
+                    h={"50px"}
+                  />
+                  <VStack display={"block"}>
+                    <Text fontWeight={"bold"} fontSize={23}>
+                      {data?.owner.username}
+                    </Text>
+                    <Text fontSize={15}>
+                      {data?.owner.address.split(",")[0]} /{" "}
+                      {data?.owner.address.split(",")[1]}
+                    </Text>
+                  </VStack>
+                </HStack>
+              </Link>
               <VStack alignItems={"flex-end"}>
                 <HStack>
                   <VStack>
                     <Text fontSize={20} fontWeight="bold">
-                      37.4 °C
+                      {userData?.rating} / 5
                     </Text>
                   </VStack>
                   <Box fontSize={35} color="blue.400">
-                    <FaSmile />
+                    {userData?.rating === 0 ||
+                    userData?.rating === 1 ||
+                    userData?.rating === 2 ||
+                    userData?.rating === 3 ? (
+                      <FaRegMeh />
+                    ) : (
+                      <FaSmile />
+                    )}
+                    {/* <FaSmile /> */}
                   </Box>
                 </HStack>
-                <Text fontSize={13}>매너온도</Text>
+                <Text fontSize={13}>Rating</Text>
               </VStack>
             </HStack>
             <Box w={"40vw"} py={5} borderBottom={"1px solid gray"}>

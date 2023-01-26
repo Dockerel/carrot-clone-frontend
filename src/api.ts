@@ -105,3 +105,20 @@ export const userModify = (data: IModifyUserMe) =>
       headers: { "X-CSRFToken": Cookie.get("csrftoken") || "" },
     })
     .then((response) => response.status);
+
+export const getPublicUserDetail = ({ queryKey }: QueryFunctionContext) => {
+  const [_, username] = queryKey;
+  return instance.get(`users/@${username}`).then((res) => res.data);
+};
+
+export const getUserOnSaleProducts = ({ queryKey }: QueryFunctionContext) => {
+  const [_, username] = queryKey;
+  return instance.get(`products/@${username}`).then((res) => res.data);
+};
+
+export const postProductIsSold = (pk: number) =>
+  instance
+    .post(`products/${pk}/sold`, null, {
+      headers: { "X-CSRFToken": Cookie.get("csrftoken") || "" },
+    })
+    .then((res) => res.status);

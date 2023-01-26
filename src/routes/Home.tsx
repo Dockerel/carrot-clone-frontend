@@ -42,18 +42,20 @@ export default function Home() {
           <ProductSkeleton />
         </>
       ) : null}
-      {data?.map((product) => (
-        <Product
-          key={product.id}
-          id={product.id}
-          photoUrl={
-            product.photos[0] === undefined ? noImage : product.photos[0].file
-          }
-          name={product.name}
-          price={product.price}
-          address={product.owner.address}
-        />
-      ))}
+      {data?.map((product) =>
+        product.is_sold ? null : (
+          <Product
+            key={product.id}
+            id={product.id}
+            photoUrl={
+              product.photos[0] === undefined ? noImage : product.photos[0].file
+            }
+            name={product.name}
+            price={product.price}
+            address={product.owner.address}
+          />
+        )
+      )}
     </Grid>
   );
 }

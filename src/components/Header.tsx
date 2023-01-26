@@ -111,6 +111,9 @@ export default function Header() {
                 <Avatar name={user?.username} size={"md"} src={user?.avatar} />
               </MenuButton>
               <MenuList>
+                <Link to={`/user/${user?.username}`}>
+                  <MenuItem>My profile</MenuItem>
+                </Link>
                 <Link to="/user-modify">
                   <MenuItem>Modify user</MenuItem>
                 </Link>
