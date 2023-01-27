@@ -122,3 +122,48 @@ export const postProductIsSold = (pk: number) =>
       headers: { "X-CSRFToken": Cookie.get("csrftoken") || "" },
     })
     .then((res) => res.status);
+
+export const postUploadURL = () =>
+  instance
+    .post("photos/get-url", null, {
+      headers: { "X-CSRFToken": Cookie.get("csrftoken") || "" },
+    })
+    .then((res) => res.data);
+
+export interface IUploadImageVaraibles {
+  file: FileList;
+  uploadURL: string;
+}
+
+export const uploadImage = ({ file, uploadURL }: IUploadImageVaraibles) => {
+  const form = new FormData();
+  form.append("file", file[0]);
+  return axios
+    .post(uploadURL, form, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    })
+    .then((response) => response.data);
+};
+
+export interface ICreatePhotoVariables {
+  description: string;
+  file: string;
+  productPk: string;
+}
+
+export const createPhoto = ({
+  description,
+  file,
+  productPk,
+}: ICreatePhotoVariables) =>
+  instance
+    .post(
+      `products/${productPk}/photos`,
+      { description, file },
+      {
+        headers: { "X-CSRFToken": Cookie.get("csrftoken") || "" },
+      }
+    )
+    .then((res) => res.data);

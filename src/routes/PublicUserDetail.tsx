@@ -21,6 +21,7 @@ import publicUser from "../image/publicUser.jpg";
 import noImage from "../image/noImage.jpg";
 import { IPublicUserDetail, IUserOnSaleProduct } from "../types";
 import useUser from "../lib/useUser";
+import { FaCamera, FaPencilAlt } from "react-icons/fa";
 
 export default function PublicUserDetail() {
   const { username } = useParams();
@@ -95,6 +96,20 @@ export default function PublicUserDetail() {
             <>
               {productsData?.map((product, index) => (
                 <Box position={"relative"} key={index}>
+                  {userData?.username !== user?.username ? null : (
+                    <HStack w={"100%"} mb={3}>
+                      <Button as={"a"} href={"https://www.naver.com"} w={"50%"}>
+                        <FaPencilAlt />
+                      </Button>
+                      <Button
+                        as={"a"}
+                        href={`/products/${product.pk}/photo-upload`}
+                        w={"50%"}
+                      >
+                        <FaCamera />
+                      </Button>
+                    </HStack>
+                  )}
                   <Link to={`/products/${product.pk}`}>
                     <VStack
                       w={"100%"}
@@ -124,6 +139,7 @@ export default function PublicUserDetail() {
                       </Box>
                     </VStack>
                   </Link>
+
                   {userData?.username !== user?.username ? null : (
                     <Button
                       mt={"10px"}
@@ -131,11 +147,11 @@ export default function PublicUserDetail() {
                       w={"60px"}
                       h={"30px"}
                       fontSize={"15px"}
-                      position={"absolute"}
-                      top={"0"}
-                      left={"10px"}
                       disabled={product.is_sold}
                       onClick={() => onSoldClick(product.pk)}
+                      position={"absolute"}
+                      top={"50px"}
+                      left={"10px"}
                     >
                       Sold
                     </Button>
