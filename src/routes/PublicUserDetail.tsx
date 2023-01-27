@@ -98,7 +98,11 @@ export default function PublicUserDetail() {
                 <Box position={"relative"} key={index}>
                   {userData?.username !== user?.username ? null : (
                     <HStack w={"100%"} mb={3}>
-                      <Button as={"a"} href={"https://www.naver.com"} w={"50%"}>
+                      <Button
+                        as={"a"}
+                        href={`/products/${product.pk}/modify`}
+                        w={"50%"}
+                      >
                         <FaPencilAlt />
                       </Button>
                       <Button

@@ -167,3 +167,51 @@ export const createPhoto = ({
       }
     )
     .then((res) => res.data);
+
+export interface IUploadProductVariables {
+  name: string;
+  price: number;
+  description: string;
+  kind: string;
+}
+
+export const postUploadProduct = ({
+  name,
+  price,
+  description,
+  kind,
+}: IUploadProductVariables) =>
+  instance
+    .post(
+      "products/",
+      { name, price, description, kind },
+      {
+        headers: { "X-CSRFToken": Cookie.get("csrftoken") || "" },
+      }
+    )
+    .then((res) => res.data);
+
+export interface IModifyProductVariables {
+  name: string;
+  price: number;
+  description: string;
+  kind: string;
+  productPk: string;
+}
+
+export const putProductInformation = ({
+  name,
+  price,
+  description,
+  kind,
+  productPk,
+}: IModifyProductVariables) =>
+  instance
+    .put(
+      `products/${productPk}`,
+      { name, price, description, kind },
+      {
+        headers: { "X-CSRFToken": Cookie.get("csrftoken") || "" },
+      }
+    )
+    .then((res) => res.status);
