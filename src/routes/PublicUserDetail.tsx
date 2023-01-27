@@ -92,7 +92,7 @@ export default function PublicUserDetail() {
           w={"100%"}
           templateColumns={{ sm: "1fr", md: "repeat(3, 1fr)" }}
         >
-          {!productsDataIsLoading && productsData ? (
+          {!productsDataIsLoading && productsData?.length !== 0 ? (
             <>
               {productsData?.map((product, index) => (
                 <Box position={"relative"} key={index}>
