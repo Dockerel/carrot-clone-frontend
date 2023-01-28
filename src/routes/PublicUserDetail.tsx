@@ -11,7 +11,7 @@ import {
   VStack,
 } from "@chakra-ui/react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import {
   getPublicUserDetail,
   getUserOnSaleProducts,
@@ -24,6 +24,7 @@ import useUser from "../lib/useUser";
 import { FaCamera, FaPencilAlt } from "react-icons/fa";
 
 export default function PublicUserDetail() {
+  let productPk: number;
   const { username } = useParams();
   const { user } = useUser();
   const { isLoading: userDataIsLoading, data: userData } =
@@ -33,6 +34,7 @@ export default function PublicUserDetail() {
   >(["userOnSaleProducts", username], getUserOnSaleProducts);
   const queryClient = useQueryClient();
   const toast = useToast();
+  const navigate = useNavigate();
   const mutation = useMutation(postProductIsSold, {
     onSuccess: () => {
       toast({
@@ -40,9 +42,11 @@ export default function PublicUserDetail() {
         status: "success",
       });
       queryClient.refetchQueries(["userOnSaleProducts"]);
+      navigate(`/products/${productPk}/buyer`);
     },
   });
   const onSoldClick = (id: number) => {
+    productPk = id;
     mutation.mutate(id);
   };
 

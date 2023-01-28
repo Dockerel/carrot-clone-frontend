@@ -62,6 +62,7 @@ export interface IUserMe {
   avatar: string;
   phone_nb: string;
   address: string;
+  detailed_address: string;
 }
 
 export interface IModifyUserMe {
