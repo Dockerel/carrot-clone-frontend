@@ -11,6 +11,7 @@ import ProductModify from "./routes/ProductModify";
 import ProductPhotoUpload from "./routes/ProductPhotoUpload";
 import ProductUpload from "./routes/ProductUpload";
 import PublicUserDetail from "./routes/PublicUserDetail";
+import PurchaseHistory from "./routes/PurchaseHistory";
 import UserModify from "./routes/UserModify";
 
 const router = createBrowserRouter([
@@ -50,6 +51,10 @@ const router = createBrowserRouter([
       {
         path: "user/:username",
         element: <PublicUserDetail />,
+      },
+      {
+        path: "user/:username/purchase-history",
+        element: <PurchaseHistory />,
       },
       {
         path: "social",

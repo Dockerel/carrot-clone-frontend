@@ -30,11 +30,12 @@ export default function NotOwnerPage({ children }: INotOwnerPage) {
         toast({
           title: "Not authenticated",
           status: "error",
+          isClosable: true,
         });
         navigate("/");
       }
     }
-  });
+  }, [productIsLoading, meIsLoading, productData, meData]);
 
   return <>{children}</>;
 }

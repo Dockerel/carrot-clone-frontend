@@ -215,3 +215,25 @@ export const putProductInformation = ({
       }
     )
     .then((res) => res.status);
+
+interface IPutProductBuyerVariables {
+  productPk: string;
+  username: string;
+}
+
+export const putProductBuyer = ({
+  productPk,
+  username,
+}: IPutProductBuyerVariables) =>
+  instance
+    .put(`products/${productPk}/${username}`, null, {
+      headers: { "X-CSRFToken": Cookie.get("csrftoken") || "" },
+    })
+    .then((res) => res.data);
+
+export const getPurchaseHistory = ({ queryKey }: QueryFunctionContext) => {
+  const [_, username] = queryKey;
+  return instance
+    .get(`/products/@${username}/purchase-history`)
+    .then((res) => res.data);
+};

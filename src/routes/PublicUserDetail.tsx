@@ -82,12 +82,19 @@ export default function PublicUserDetail() {
             as={"a"}
             href={"/user/admin"}
             colorScheme={"orange"}
-            variant={"outline"}
+            variant={"solid"}
           >
             Sale items
           </Button>
-          <Button as={"a"} href={"/user/admin/reviews"} variant={"ghost"}>
+          <Button as={"a"} href={"/user/admin/reviews"} variant={"outline"}>
             Reviews
+          </Button>
+          <Button
+            as={"a"}
+            href={`/user/${username}/purchase-history`}
+            variant={"outline"}
+          >
+            Purchase history
           </Button>
         </HStack>
         <Grid
