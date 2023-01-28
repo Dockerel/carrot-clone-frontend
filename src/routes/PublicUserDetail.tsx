@@ -80,22 +80,28 @@ export default function PublicUserDetail() {
         <HStack borderBottom={"1px solid orange"} w={"100%"} pb={3}>
           <Button
             as={"a"}
-            href={"/user/admin"}
+            href={`/user/${username}`}
             colorScheme={"orange"}
             variant={"solid"}
           >
             Sale items
           </Button>
-          <Button as={"a"} href={"/user/admin/reviews"} variant={"outline"}>
-            Reviews
-          </Button>
           <Button
             as={"a"}
-            href={`/user/${username}/purchase-history`}
+            href={`/user/${username}/reviews`}
             variant={"outline"}
           >
-            Purchase history
+            Reviews
           </Button>
+          {userData?.username !== user?.username ? null : (
+            <Button
+              as={"a"}
+              href={`/user/${username}/purchase-history`}
+              variant={"outline"}
+            >
+              Purchase history
+            </Button>
+          )}
         </HStack>
         <Grid
           columnGap={3}

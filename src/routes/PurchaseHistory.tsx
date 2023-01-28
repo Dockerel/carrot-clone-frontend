@@ -55,10 +55,14 @@ export default function PurchaseHistory() {
           </HStack>
 
           <HStack borderBottom={"1px solid orange"} w={"100%"} pb={3}>
-            <Button as={"a"} href={"/user/admin"} variant={"outline"}>
+            <Button as={"a"} href={`/user/${username}`} variant={"outline"}>
               Sale items
             </Button>
-            <Button as={"a"} href={"/user/admin/reviews"} variant={"outline"}>
+            <Button
+              as={"a"}
+              href={`/user/${username}/reviews`}
+              variant={"outline"}
+            >
               Reviews
             </Button>
             <Button
@@ -79,35 +83,46 @@ export default function PurchaseHistory() {
             {productDataIsLoading ? null : (
               <>
                 {productData?.map((product, index) => (
-                  <Link to={`/products/${product.id}`} key={index}>
-                    <VStack
-                      w={"100%"}
-                      h={"200px"}
-                      display={"flex"}
-                      alignItems={"center"}
-                    >
-                      <Square size={"100%"}>
-                        <Img
-                          borderRadius={"lg"}
-                          w={"100%"}
-                          h={"100%"}
-                          objectFit="cover"
-                          src={
-                            product.photos.length !== 0
-                              ? product.photos[0].file
-                              : noImage
-                          }
-                        />
-                      </Square>
-                      <Box w={"100%"}>
-                        <Text fontSize={20}>{product.name}</Text>
-                        <Text fontWeight={"extrabold"} fontSize={17}>
-                          {product.price} 원
-                        </Text>
-                        <Text fontSize={15}>{userData?.address}</Text>
-                      </Box>
-                    </VStack>
-                  </Link>
+                  <VStack key={index}>
+                    {product.review_exists ? null : (
+                      <Button
+                        w={"100%"}
+                        as={"a"}
+                        href={`/products/${product.id}/review-upload`}
+                      >
+                        Review
+                      </Button>
+                    )}
+                    <Link to={`/products/${product.id}`}>
+                      <VStack
+                        w={"100%"}
+                        h={"200px"}
+                        display={"flex"}
+                        alignItems={"center"}
+                      >
+                        <Square size={"100%"}>
+                          <Img
+                            borderRadius={"lg"}
+                            w={"100%"}
+                            h={"100%"}
+                            objectFit="cover"
+                            src={
+                              product.photos.length !== 0
+                                ? product.photos[0].file
+                                : noImage
+                            }
+                          />
+                        </Square>
+                        <Box w={"100%"}>
+                          <Text fontSize={20}>{product.name}</Text>
+                          <Text fontWeight={"extrabold"} fontSize={17}>
+                            {product.price} 원
+                          </Text>
+                          <Text fontSize={15}>{userData?.address}</Text>
+                        </Box>
+                      </VStack>
+                    </Link>
+                  </VStack>
                 ))}
               </>
             )}

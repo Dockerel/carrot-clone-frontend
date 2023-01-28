@@ -23,8 +23,9 @@ export interface IProductList {
   price: number;
   description: string;
   kind: string;
-  is_reported: false;
-  is_sold: false;
+  is_reported: boolean;
+  is_sold: boolean;
+  review_exists: boolean;
 }
 
 export interface IProductDetail {
@@ -89,4 +90,20 @@ export interface IUserOnSaleProduct {
   price: number;
   photos: { file: string }[];
   is_sold: boolean;
+}
+
+export interface IReviews {
+  user: {
+    pk: number;
+    username: string;
+    address: string;
+    avatar: string;
+  };
+  product: {
+    name: string;
+    price: number;
+  };
+  payload: string;
+  rating: number;
+  created_at: string;
 }

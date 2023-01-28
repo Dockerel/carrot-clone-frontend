@@ -237,3 +237,8 @@ export const getPurchaseHistory = ({ queryKey }: QueryFunctionContext) => {
     .get(`/products/@${username}/purchase-history`)
     .then((res) => res.data);
 };
+
+export const getReviews = ({ queryKey }: QueryFunctionContext) => {
+  const [_, username] = queryKey;
+  return instance.get(`/reviews/@${username}`).then((res) => res.data);
+};
