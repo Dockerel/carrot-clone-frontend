@@ -112,7 +112,7 @@ export default function PublicUserDetail() {
           {!productsDataIsLoading && productsData?.length !== 0 ? (
             <>
               {productsData?.map((product, index) => (
-                <Box position={"relative"} key={index}>
+                <VStack position={"relative"} key={index}>
                   {userData?.username !== user?.username ? null : (
                     <HStack w={"100%"} mb={3}>
                       <Button
@@ -141,8 +141,8 @@ export default function PublicUserDetail() {
                       <Square size={"100%"}>
                         <Img
                           borderRadius={"lg"}
-                          w={"100%"}
-                          h={"100%"}
+                          w={"200px"}
+                          h={"200px"}
                           objectFit="cover"
                           src={
                             product.photos.length > 0
@@ -177,7 +177,7 @@ export default function PublicUserDetail() {
                       Sold
                     </Button>
                   )}
-                </Box>
+                </VStack>
               ))}
             </>
           ) : (

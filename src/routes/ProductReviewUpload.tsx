@@ -5,20 +5,23 @@ import {
   FormControl,
   FormLabel,
   Heading,
-  Input,
   Slider,
   SliderFilledTrack,
   SliderMark,
   SliderThumb,
   SliderTrack,
   Textarea,
-  useSlider,
+  useToast,
   VStack,
 } from "@chakra-ui/react";
+import { useMutation } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
+import { useNavigate, useParams } from "react-router-dom";
+import { productReviewExistStatus, uploadReview } from "../api";
 import ReviewProtectPage from "../components/ReviewProtectPage";
 
 export default function ProductReviewUpload() {
+  const { productPk } = useParams();
   let rating: number;
   const labelStyles = {
     mt: "2",
@@ -28,10 +31,33 @@ export default function ProductReviewUpload() {
   interface IForm {
     payload: string;
   }
+  const toast = useToast();
+  const navigate = useNavigate();
+  const productReviewExistStatusMutation = useMutation(
+    productReviewExistStatus,
+    {
+      onSuccess: () => {
+        toast({
+          title: "Review uploaded!",
+          status: "success",
+        });
+        navigate("/");
+      },
+    }
+  );
+  const uploadReviewMutation = useMutation(uploadReview, {
+    onSuccess: () => {
+      if (productPk) {
+        productReviewExistStatusMutation.mutate(productPk);
+      }
+    },
+  });
+
   const { register, handleSubmit } = useForm<IForm>();
   const onSubmit = (data: any) => {
     data.rating = rating;
-    console.log(data);
+    data.productPk = productPk;
+    uploadReviewMutation.mutate(data);
   };
   const onChange = (data: any) => {
     rating = data;
@@ -76,7 +102,16 @@ export default function ProductReviewUpload() {
             <SliderThumb boxSize={6} bg={"orange"} />
           </Slider>
 
-          <Button type="submit" colorScheme={"orange"} size="lg" w="100%">
+          <Button
+            isLoading={
+              uploadReviewMutation.isLoading ||
+              productReviewExistStatusMutation.isLoading
+            }
+            type="submit"
+            colorScheme={"orange"}
+            size="lg"
+            w="100%"
+          >
             Upload Photo
           </Button>
         </VStack>

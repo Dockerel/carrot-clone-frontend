@@ -242,3 +242,27 @@ export const getReviews = ({ queryKey }: QueryFunctionContext) => {
   const [_, username] = queryKey;
   return instance.get(`/reviews/@${username}`).then((res) => res.data);
 };
+
+interface IUploadReview {
+  productPk: string;
+  payload: string;
+  rating: number;
+}
+
+export const uploadReview = ({ productPk, payload, rating }: IUploadReview) =>
+  instance
+    .post(
+      `reviews/${productPk}`,
+      { payload, rating },
+      {
+        headers: { "X-CSRFToken": Cookie.get("csrftoken") || "" },
+      }
+    )
+    .then((res) => res.data);
+
+export const productReviewExistStatus = (productPk: string) =>
+  instance
+    .put(`products/${productPk}/review-uploaded`, null, {
+      headers: { "X-CSRFToken": Cookie.get("csrftoken") || "" },
+    })
+    .then((res) => res.status);

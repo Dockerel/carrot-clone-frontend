@@ -103,8 +103,8 @@ export default function PurchaseHistory() {
                         <Square size={"100%"}>
                           <Img
                             borderRadius={"lg"}
-                            w={"100%"}
-                            h={"100%"}
+                            w={"200px"}
+                            h={"200px"}
                             objectFit="cover"
                             src={
                               product.photos.length !== 0
