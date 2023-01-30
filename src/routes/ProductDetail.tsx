@@ -1,15 +1,18 @@
 import { useQuery } from "@tanstack/react-query";
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { getProduct, getPublicUserDetail } from "../api";
 import { IProductDetail, IPublicUserDetail } from "../types";
 import React from "react";
 import {
   Avatar,
   Box,
+  Button,
   HStack,
   IconButton,
   Text,
   useBreakpointValue,
+  useDisclosure,
+  useToast,
   VStack,
 } from "@chakra-ui/react";
 // Here we have used react-icons package for the icons
@@ -23,6 +26,7 @@ import { FaRegMeh, FaSmile } from "react-icons/fa";
 import { formatDate } from "../lib/utils";
 import noImage from "../image/noImage.jpg";
 import useUser from "../lib/useUser";
+import ShareModal from "../components/ShareModal";
 
 // Settings for the slider
 const settings = {
@@ -38,11 +42,15 @@ const settings = {
 };
 
 export default function ProductDetail() {
+  const navigate = useNavigate();
+  const toast = useToast();
+  const { isOpen, onClose, onOpen } = useDisclosure();
   const { productPk } = useParams();
   const { isLoading, data } = useQuery<IProductDetail>(
     ["products", productPk],
     getProduct
   );
+  const { userLoading, user, isLoggedIn } = useUser();
   const { isLoading: userDataIsLoading, data: userData } =
     useQuery<IPublicUserDetail>(
       ["userDetail", data?.owner.username],
@@ -67,6 +75,19 @@ export default function ProductDetail() {
     cards.push(noImage);
   }
   // These are the images used in the slide
+
+  const onChatBtnClick = () => {
+    if (!isLoggedIn) {
+      toast({
+        title: "Please sign in first!",
+        status: "info",
+      });
+    } else {
+      if (user && userData) {
+        navigate(`/chat/${user.username}/${userData.username}`);
+      }
+    }
+  };
 
   return (
     <NoProductPage>
@@ -204,8 +225,27 @@ export default function ProductDetail() {
                 </Box>
               </VStack>
             </Box>
+            <HStack w={"100%"}>
+              <Button
+                onClick={onChatBtnClick}
+                w={"60%"}
+                h={"50px"}
+                colorScheme={"orange"}
+              >
+                Chat
+              </Button>
+              <Button
+                onClick={onOpen}
+                w={"40%"}
+                h={"50px"}
+                colorScheme={"twitter"}
+              >
+                Share
+              </Button>
+            </HStack>
           </VStack>
         )}
+        <ShareModal isOpen={isOpen} onClose={onClose} />
       </Box>
     </NoProductPage>
   );
