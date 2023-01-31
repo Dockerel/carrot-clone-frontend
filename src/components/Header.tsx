@@ -18,15 +18,21 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import { Link, useNavigate } from "react-router-dom";
-import { FaCarrot, FaMoon, FaSun } from "react-icons/fa";
+import { FaBell, FaCarrot, FaMoon, FaSun } from "react-icons/fa";
 import SignupModal from "./SignupModal";
 import SigninModal from "./SigninModal";
 import useUser from "../lib/useUser";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { signOut } from "../api";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { getMeNotification, signOut } from "../api";
 import { useRef } from "react";
+import NotificationModal from "./NotificationModal";
+import { IMeNotification } from "../types";
 
 export default function Header() {
+  const { isLoading, data } = useQuery<IMeNotification[]>(
+    ["meNotification"],
+    getMeNotification
+  );
   const queryClient = useQueryClient();
   const navigate = useNavigate();
   const { userLoading, user, isLoggedIn } = useUser();
@@ -41,6 +47,11 @@ export default function Header() {
     isOpen: isSignInOpen,
     onClose: onSignInClose,
     onOpen: onSignInOpen,
+  } = useDisclosure();
+  const {
+    isOpen: isNotificationOpen,
+    onClose: onNotificationClose,
+    onOpen: onNotificationOpen,
   } = useDisclosure();
   const toast = useToast();
   const toastId = useRef<ToastId>();
@@ -106,23 +117,45 @@ export default function Header() {
             icon={<Icon />}
           />
           {userLoading ? null : isLoggedIn ? (
-            <Menu>
-              <MenuButton>
-                <Avatar name={user?.username} size={"md"} src={user?.avatar} />
-              </MenuButton>
-              <MenuList>
-                <Link to="/product/upload">
-                  <MenuItem>Upload product</MenuItem>
-                </Link>
-                <Link to={`/user/${user?.username}`}>
-                  <MenuItem>My profile</MenuItem>
-                </Link>
-                <Link to="/user-modify">
-                  <MenuItem>Modify user</MenuItem>
-                </Link>
-                <MenuItem onClick={onSignOut}>Log out</MenuItem>
-              </MenuList>
-            </Menu>
+            <>
+              <Menu>
+                <MenuButton>
+                  <Avatar
+                    name={user?.username}
+                    size={"md"}
+                    src={user?.avatar}
+                  />
+                </MenuButton>
+                <MenuList>
+                  <Link to="/product/upload">
+                    <MenuItem>Upload product</MenuItem>
+                  </Link>
+                  <Link to={`/user/${user?.username}`}>
+                    <MenuItem>My profile</MenuItem>
+                  </Link>
+                  <Link to="/user-modify">
+                    <MenuItem>Modify user</MenuItem>
+                  </Link>
+                  <MenuItem onClick={onSignOut}>Log out</MenuItem>
+                </MenuList>
+              </Menu>
+              <Box position={"relative"}>
+                <Button variant={"ghost"} onClick={onNotificationOpen}>
+                  <FaBell />
+                </Button>
+                {data?.length === 0 ? null : (
+                  <Box
+                    position={"absolute"}
+                    top={"10px"}
+                    right={"10px"}
+                    h={"6px"}
+                    w={"6px"}
+                    backgroundColor={"red"}
+                    borderRadius={"full"}
+                  />
+                )}
+              </Box>
+            </>
           ) : (
             <>
               <Button onClick={onSignInOpen}>Sign in</Button>
@@ -136,6 +169,10 @@ export default function Header() {
         </HStack>
         <SignupModal isOpen={isSignUpOpen} onClose={onSignUpClose} />
         <SigninModal isOpen={isSignInOpen} onClose={onSignInClose} />
+        <NotificationModal
+          isOpen={isNotificationOpen}
+          onClose={onNotificationClose}
+        />
       </Box>
     </Stack>
   );

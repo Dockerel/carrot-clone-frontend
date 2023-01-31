@@ -266,3 +266,20 @@ export const productReviewExistStatus = (productPk: string) =>
       headers: { "X-CSRFToken": Cookie.get("csrftoken") || "" },
     })
     .then((res) => res.status);
+
+export const getMeNotification = () =>
+  instance.get("notifications/me").then((res) => res.data);
+
+export const postNotification = (username: string) =>
+  instance
+    .post(`notifications/${username}`, null, {
+      headers: { "X-CSRFToken": Cookie.get("csrftoken") || "" },
+    })
+    .then((res) => res.data);
+
+export const deleteNotification = (ntfnPk: string) =>
+  instance
+    .delete(`notifications/${ntfnPk}/delete`, {
+      headers: { "X-CSRFToken": Cookie.get("csrftoken") || "" },
+    })
+    .then((res) => res.status);

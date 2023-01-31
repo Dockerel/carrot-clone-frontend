@@ -7,18 +7,14 @@ interface IProtectPage {
   children: React.ReactNode;
 }
 export default function ChatProtectPage({ children }: IProtectPage) {
-  const { user1, user2 } = useParams();
   const { userLoading, user, isLoggedIn } = useUser();
-  console.log(isLoggedIn);
+  const { username } = useParams();
+
   const toast = useToast();
   const navigate = useNavigate();
   useEffect(() => {
     if (!userLoading) {
-      if (
-        (user?.username !== user1 && user?.username !== user2) ||
-        user1 === user2 ||
-        !isLoggedIn
-      ) {
+      if (!isLoggedIn || username === user?.username) {
         toast({
           title: "Not authenticated",
           status: "error",

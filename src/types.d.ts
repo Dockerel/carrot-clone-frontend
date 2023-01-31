@@ -107,3 +107,22 @@ export interface IReviews {
   rating: number;
   created_at: string;
 }
+
+export interface IMeNotification {
+  pk: string;
+  receiver: {
+    pk: number;
+    username: string;
+    phone_nb: string;
+    address: string;
+    avatar: string;
+  };
+  sender: {
+    pk: number;
+    username: string;
+    phone_nb: string;
+    address: string;
+    avatar: string;
+  };
+  updated_at: string;
+}

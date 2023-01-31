@@ -1,6 +1,6 @@
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import { getProduct, getPublicUserDetail } from "../api";
+import { getProduct, getPublicUserDetail, postNotification } from "../api";
 import { IProductDetail, IPublicUserDetail } from "../types";
 import React from "react";
 import {
@@ -76,6 +76,15 @@ export default function ProductDetail() {
   }
   // These are the images used in the slide
 
+  const mutation = useMutation(postNotification, {
+    onSuccess: () => {
+      toast({
+        title: "Chat added",
+        status: "success",
+      });
+    },
+  });
+
   const onChatBtnClick = () => {
     if (!isLoggedIn) {
       toast({
@@ -84,7 +93,8 @@ export default function ProductDetail() {
       });
     } else {
       if (user && userData) {
-        navigate(`/chat/${user.username}/${userData.username}`);
+        mutation.mutate(userData.username);
+        navigate(`/chat/${userData.username}`);
       }
     }
   };

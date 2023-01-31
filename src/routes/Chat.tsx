@@ -6,31 +6,33 @@ import Talk from "talkjs";
 import { getPublicUserDetail } from "../api";
 import ChatProtectPage from "../components/ChatProtectPage";
 import useUser from "../lib/useUser";
+import hash from "object-hash";
 
 export default function Chat() {
-  console.log();
-  let senderUsername;
-  let receiverUsername;
-  const { user1, user2 } = useParams();
   const { userLoading, user } = useUser();
+  const senderUser = user;
+  const { username } = useParams();
+
+  let user1;
+  let user2;
 
   if (!userLoading) {
-    if (user?.username === user1) {
-      senderUsername = user1;
-      receiverUsername = user2;
-    } else {
-      senderUsername = user2;
-      receiverUsername = user1;
-    }
+    user1 = senderUser?.username;
+    user2 = username;
   }
+
   const sender = user;
   const { isLoading, data } = useQuery(
-    ["receiver", receiverUsername],
+    ["receiver", user2],
     getPublicUserDetail
   );
 
   const [talkLoaded, markTalkLoaded] = useState(false);
   const chatboxEl = useRef<any>();
+
+  const onChangeUnread = () => {
+    console.log("message!");
+  };
 
   useEffect(() => {
     Talk.ready.then(() => markTalkLoaded(true));
@@ -65,7 +67,7 @@ export default function Chat() {
       conversation.setParticipant(user1);
       conversation.setParticipant(user2);
 
-      const chatbox = session.createChatbox();
+      const chatbox = session.createInbox();
       chatbox.select(conversation);
       chatbox.mount(chatboxEl.current);
 
@@ -75,9 +77,7 @@ export default function Chat() {
 
   return (
     <ChatProtectPage>
-      <Box h={"100%"} mt={"40px"}>
-        <Container h={"80vh"} ref={chatboxEl} />
-      </Box>
+      <Container onChange={onChangeUnread} h={"80vh"} ref={chatboxEl} />
     </ChatProtectPage>
   );
 }
