@@ -18,7 +18,8 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import { Link, useNavigate } from "react-router-dom";
-import { FaBell, FaCarrot, FaMoon, FaSun } from "react-icons/fa";
+import { FaCarrot, FaMoon, FaSun } from "react-icons/fa";
+import { BsFillChatDotsFill } from "react-icons/bs";
 import SignupModal from "./SignupModal";
 import SigninModal from "./SigninModal";
 import useUser from "../lib/useUser";
@@ -47,11 +48,6 @@ export default function Header() {
     isOpen: isSignInOpen,
     onClose: onSignInClose,
     onOpen: onSignInOpen,
-  } = useDisclosure();
-  const {
-    isOpen: isNotificationOpen,
-    onClose: onNotificationClose,
-    onOpen: onNotificationOpen,
   } = useDisclosure();
   const toast = useToast();
   const toastId = useRef<ToastId>();
@@ -140,20 +136,9 @@ export default function Header() {
                 </MenuList>
               </Menu>
               <Box position={"relative"}>
-                <Button variant={"ghost"} onClick={onNotificationOpen}>
-                  <FaBell />
+                <Button as={"a"} href="/chat" variant={"ghost"}>
+                  <BsFillChatDotsFill />
                 </Button>
-                {data?.length === 0 ? null : (
-                  <Box
-                    position={"absolute"}
-                    top={"10px"}
-                    right={"10px"}
-                    h={"6px"}
-                    w={"6px"}
-                    backgroundColor={"red"}
-                    borderRadius={"full"}
-                  />
-                )}
               </Box>
             </>
           ) : (
@@ -169,10 +154,6 @@ export default function Header() {
         </HStack>
         <SignupModal isOpen={isSignUpOpen} onClose={onSignUpClose} />
         <SigninModal isOpen={isSignInOpen} onClose={onSignInClose} />
-        <NotificationModal
-          isOpen={isNotificationOpen}
-          onClose={onNotificationClose}
-        />
       </Box>
     </Stack>
   );

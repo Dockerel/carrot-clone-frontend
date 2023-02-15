@@ -283,3 +283,43 @@ export const deleteNotification = (ntfnPk: string) =>
       headers: { "X-CSRFToken": Cookie.get("csrftoken") || "" },
     })
     .then((res) => res.status);
+
+export const getMeChattingroom = () =>
+  instance.get("dms/chatting-rooms/me").then((res) => res.data);
+
+export const makeChatRoom = (username: string) =>
+  instance
+    .post(`dms/chatting-rooms/@${username}/create`, null, {
+      headers: { "X-CSRFToken": Cookie.get("csrftoken") || "" },
+    })
+    .then((res) => res.data);
+
+export const getChatRoomPk = ({ queryKey }: QueryFunctionContext) => {
+  const [_, username] = queryKey;
+  return instance
+    .get(`dms/chatting-rooms/@${username}/create`)
+    .then((res) => res.data);
+};
+
+export const getMessages = ({ queryKey }: QueryFunctionContext) => {
+  const [_, roomPK] = queryKey;
+  return instance
+    .get(`dms/chatting-rooms/${roomPK}/messages`)
+    .then((res) => res.data);
+};
+
+interface IMsg {
+  roomPk: string;
+  text: string;
+}
+
+export const sendMessages = ({ roomPk, text }: IMsg) =>
+  instance
+    .post(
+      `dms/chatting-rooms/${roomPk}/messages`,
+      { text: text },
+      {
+        headers: { "X-CSRFToken": Cookie.get("csrftoken") || "" },
+      }
+    )
+    .then((res) => res.data);

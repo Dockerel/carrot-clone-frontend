@@ -1,6 +1,7 @@
 import { createBrowserRouter } from "react-router-dom";
 import Root from "./components/Root";
 import Chat from "./routes/Chat";
+import ChatDetail from "./routes/ChatDetail";
 import GithubConfirm from "./routes/GithubConfirm";
 import Home from "./routes/Home";
 import KakaoConfirm from "./routes/KakaoConfirm";
@@ -68,8 +69,12 @@ const router = createBrowserRouter([
         element: <UserReviews />,
       },
       {
-        path: "chat/:username",
+        path: "chat",
         element: <Chat />,
+      },
+      {
+        path: "chat/:username",
+        element: <ChatDetail />,
       },
       {
         path: "social",

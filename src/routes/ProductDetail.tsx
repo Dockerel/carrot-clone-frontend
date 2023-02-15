@@ -1,6 +1,11 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import { getProduct, getPublicUserDetail, postNotification } from "../api";
+import {
+  getProduct,
+  getPublicUserDetail,
+  makeChatRoom,
+  postNotification,
+} from "../api";
 import { IProductDetail, IPublicUserDetail } from "../types";
 import React from "react";
 import {
@@ -76,14 +81,7 @@ export default function ProductDetail() {
   }
   // These are the images used in the slide
 
-  const mutation = useMutation(postNotification, {
-    onSuccess: () => {
-      toast({
-        title: "Chat added",
-        status: "success",
-      });
-    },
-  });
+  const mutation = useMutation(makeChatRoom, {});
 
   const onChatBtnClick = () => {
     if (!isLoggedIn) {
