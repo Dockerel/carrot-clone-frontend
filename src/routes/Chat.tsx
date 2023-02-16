@@ -1,5 +1,5 @@
 import { Avatar, Box, HStack, Spinner, Text, VStack } from "@chakra-ui/react";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { FaSadTear } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import { getMeChattingroom } from "../api";

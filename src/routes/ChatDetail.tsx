@@ -53,6 +53,7 @@ interface IMsgForm {
 }
 
 export default function Chat() {
+  const queryClient = useQueryClient();
   const { username } = useParams();
   const { isLoading: roomPkIsLoading, data: roomPkData } = useQuery<IForm>(
     ["chattingroom", username],
@@ -81,6 +82,10 @@ export default function Chat() {
     ["chattingrooms"],
     getMeChattingroom
   );
+
+  if (!allRoomIsLoading) {
+    queryClient.refetchQueries(["chattingrooms"]);
+  }
   const { user, isLoggedIn, userLoading } = useUser();
 
   const roomPk = roomPkData?.id;
@@ -88,12 +93,12 @@ export default function Chat() {
     ["messages", roomPk],
     getMessages
   );
-  const { register, handleSubmit } = useForm<IMsgForm>();
-  const queryClient = useQueryClient();
+  const { register, handleSubmit, resetField } = useForm<IMsgForm>();
   const navigate = useNavigate();
   const toast = useToast();
   const mutation = useMutation(sendMessages, {
     onSuccess: () => {
+      resetField("text");
       queryClient.refetchQueries(["messages"]);
     },
     onError(error) {
@@ -110,6 +115,14 @@ export default function Chat() {
       data.text = mutation.mutate({ roomPk, text: data.text });
     }
   };
+  setInterval(() => {
+    queryClient.refetchQueries(["messages"]);
+  }, 3000);
+  const scrollPage = document.querySelector(".scroll");
+  const handleChange = (e: any) => {
+    console.log(e);
+  };
+  scrollPage?.addEventListener("change", handleChange);
   return (
     <ChatProtectPage>
       {allRoomIsLoading || userLoading ? (
@@ -183,7 +196,13 @@ export default function Chat() {
             align={"center"}
             justify={"center"}
           >
-            <VStack w={"100%"} h={"100%"} overflowY={"scroll"} py={"20px"}>
+            <VStack
+              w={"100%"}
+              h={"100%"}
+              overflowY={"scroll"}
+              py={"20px"}
+              className={"scroll"}
+            >
               {data?.map((msg) =>
                 msg.user.username === user?.username ? (
                   <HStack
